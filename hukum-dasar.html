@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Modul Praktikum Kimia Berbasis Virtual Lab: Hukum Dasar Kimia</title>
+  <style>
+    :root {
+      --bg: #e8eef4;
+      --paper: #fffdf8;
+      --ink: #1f2933;
+      --mut: #5b6b7a;
+      --acc: #0f766e;
+      --acc2: #b45309;
+      --line: #d8e0e7;
+      --box: #ecf6f4;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10171d;
+        --mut: #8da0b0;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #10171d;
+      --mut: #8da0b0;
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    #book {
+      perspective: 1800px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .page {
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 6px 14px 14px 6px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 8px 0 12px -8px rgba(0,0,0,.25);
+      padding: 26px 24px 20px;
+      min-height: 600px;
+      transform-origin: left center;
+      position: relative;
+    }
+
+    .page.out { animation: out .35s ease-in forwards; }
+    .page.in { animation: inn .35s ease-out; }
+    .page.outb { animation: outb .35s ease-in forwards; }
+    .page.inb { animation: innb .35s ease-out; }
+
+    @keyframes out { to { transform: rotateY(-70deg); opacity: 0; } }
+    @keyframes inn { from { transform: rotateY(60deg); opacity: 0; } }
+    @keyframes outb { to { transform: rotateY(70deg); opacity: 0; } }
+    @keyframes innb { from { transform: rotateY(-60deg); opacity: 0; } }
+
+    h1, h2, h3 {
+      font-family: 'Trebuchet MS', Arial, sans-serif;
+      margin: .2em 0 .5em;
+    }
+
+    h2 {
+      color: var(--acc);
+      font-size: 1.35rem;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 1.02rem;
+      color: var(--acc2);
+      margin-top: 1em;
+    }
+
+    p, li {
+      line-height: 1.55;
+      font-size: .95rem;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+      margin: .4em 0;
+    }
+
+    .box {
+      background: var(--box);
+      border-left: 4px solid var(--acc);
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: .92rem;
+    }
+
+    .warn {
+      background: #fff3e0;
+      border-left-color: #e65100;
+      color: #4a2a00;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: .85rem;
+      margin: 8px 0;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--box);
+    }
+
+    .fill td {
+      height: 26px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    figure {
+      margin: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: .78rem;
+      color: var(--mut);
+      background: #f4f8fb;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px;
+    }
+
+    figure svg {
+      width: 100%;
+      height: auto;
+      max-height: 110px;
+    }
+
+    figcaption b {
+      color: var(--acc);
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(160deg, #0f766e, #134e4a);
+      color: #fff;
+    }
+
+    .cover h1 {
+      font-size: 1.7rem;
+      line-height: 1.25;
+    }
+
+    .cover p {
+      color: #d6f1ec;
+    }
+
+    a.vid {
+      display: block;
+      margin: 8px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    a.vid b {
+      color: #c62828;
+    }
+
+    a.vid span {
+      display: block;
+      font-size: .8rem;
+      color: var(--mut);
+      font-family: Arial, sans-serif;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-family: Arial, sans-serif;
+    }
+
+    .nav button {
+      background: var(--acc);
+      color: #fff;
+      border: 0;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+
+    .nav button:disabled {
+      opacity: .35;
+    }
+
+    .nav select {
+      padding: 8px;
+      border-radius: 8px;
+      max-width: 160px;
+    }
+
+    .nav span {
+      color: var(--mut);
+      font-size: .85rem;
+    }
+
+    .pg {
+      position: absolute;
+      bottom: 6px;
+      right: 14px;
+      font: .72rem Arial;
+      color: var(--mut);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="book"></div>
+  
+  <div class="nav">
+    <button id="prev">‹ Sebelumnya</button>
+    <select id="jump"></select>
+    <span id="cnt"></span>
+    <button id="next">Berikutnya ›</button>
+  </div>
+
+  <script>
+    const yt = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+    
+    // Fungsi pembuat ilustrasi SVG
+    const bk = (c, l, o = {}) => 
+      `<svg viewBox="0 0 90 100">
+        <path d="M22 18v62q0 8 8 8h30q8 0 8-8V18" fill="none" stroke="#6b7c8c" stroke-width="3"/>
+        <path d="M24 ${o.h || 48}v32q0 6 6 6h30q6 0 6-6V${o.h || 48}z" fill="${c}" opacity=".85"/>
+        ${o.drop ? `<path d="M45 4q-6 9-6 13a6 6 0 0012 0q0-4-6-13z" fill="${o.drop}"/>` : ''}
+        ${o.paper ? `<rect x="52" y="6" width="9" height="40" fill="${o.paper}" stroke="#555" transform="rotate(12 56 26)"/>` : ''}
+        <text x="45" y="97" font-size="9" text-anchor="middle" fill="#444">${l}</text>
+      </svg>`;
+      
+    const fig = (svg, t, n) => 
+      `<figure>
+        ${svg}
+        <figcaption><b>${n}.</b> ${t}</figcaption>
+      </figure>`;
+      
+    const tit = 
+      `<svg viewBox="0 0 90 100">
+        <rect x="40" y="2" width="10" height="46" fill="#e8f1f8" stroke="#6b7c8c" stroke-width="2"/>
+        <rect x="41" y="20" width="8" height="28" fill="#f8c8d4"/>
+        <path d="M45 48v8" stroke="#6b7c8c" stroke-width="2"/>
+        <circle cx="45" cy="60" r="2.5" fill="#f06292"/>
+        <path d="M35 68h20l10 22q2 6-4 6H29q-6 0-4-6z" fill="#f8c8d4" stroke="#6b7c8c" stroke-width="2.5"/>
+      </svg>`;
+      
+    const ph = (c, v) => 
+      `<svg viewBox="0 0 90 100">
+        <rect x="38" y="4" width="14" height="60" rx="4" fill="#cfd8dc" stroke="#607d8b" stroke-width="2"/>
+        <rect x="42" y="64" width="6" height="22" fill="#90a4ae"/>
+        <rect x="30" y="14" width="30" height="16" fill="${c}"/>
+        <text x="45" y="26" font-size="11" text-anchor="middle" fill="#000">${v}</text>
+      </svg>`;
+      
+    const sw = t => 
+      `<svg viewBox="0 0 90 100">
+        <circle cx="45" cy="56" r="32" fill="#fff" stroke="#546e7a" stroke-width="4"/>
+        <rect x="39" y="12" width="12" height="8" fill="#546e7a"/>
+        <path d="M45 56V34M45 56l14 8" stroke="#d32f2f" stroke-width="3"/>
+        <text x="45" y="98" font-size="9" text-anchor="middle" fill="#444">${t}</text>
+      </svg>`;
+      
+    const th = (c, t) => 
+      `<svg viewBox="0 0 90 100">
+        <rect x="40" y="6" width="10" height="64" rx="5" fill="#fff" stroke="#607d8b" stroke-width="2"/>
+        <circle cx="45" cy="78" r="10" fill="${c}"/>
+        <rect x="43" y="${80 - c.length * 0 - 40}" width="4" height="${40}" fill="${c}"/>
+        <text x="45" y="98" font-size="9" text-anchor="middle" fill="#444">${t}</text>
+      </svg>`;
+      
+    const tab = (c, l, n) => 
+      `<svg viewBox="0 0 90 100">
+        <path d="M22 18v62q0 8 8 8h30q8 0 8-8V18" fill="none" stroke="#6b7c8c" stroke-width="3"/>
+        <path d="M24 40v40q0 6 6 6h30q6 0 6-6V40z" fill="${c}" opacity=".7"/>
+        ${n}
+        <text x="45" y="97" font-size="9" text-anchor="middle" fill="#444">${l}</text>
+      </svg>`;
+      
+    const bub = [[34, 60], [48, 52], [56, 68], [40, 74], [50, 44]]
+      .map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="#fff"/>`).join('');
+      
+    const whole = '<rect x="38" y="68" width="16" height="8" rx="3" fill="#fafafa" stroke="#999"/>';
+    
+    const crush = '<circle cx="36" cy="78" r="2" fill="#fafafa"/><circle cx="44" cy="80" r="2" fill="#fafafa"/><circle cx="52" cy="78" r="2" fill="#fafafa"/><circle cx="48" cy="76" r="2" fill="#fafafa"/>';
+    
+    const mk = (a, b) => 
+      `<svg viewBox="0 0 350 70" width="100%">
+        <rect width="350" height="70" fill="none"/>
+        <text x="4" y="14" font-size="11" fill="#777" font-family="Arial">${a}</text>
+        ${b}
+      </svg>`;
+      
+    const sc2 = (a, b) => 
+      `<svg viewBox="0 0 90 100">
+        <path d="M45 20v60M20 80h50" stroke="#546e7a" stroke-width="3"/>
+        <path d="M15 28h60" stroke="#546e7a" stroke-width="3"/>
+        <rect x="8" y="36" width="26" height="14" fill="#b3e5fc" stroke="#546e7a"/>
+        <rect x="56" y="36" width="26" height="14" fill="#ffe0b2" stroke="#546e7a"/>
+        <text x="21" y="46" font-size="8" text-anchor="middle">${a}</text>
+        <text x="69" y="46" font-size="8" text-anchor="middle">${b}</text>
+        <text x="45" y="96" font-size="9" text-anchor="middle" fill="#444">timbang</text>
+      </svg>`;
+      
+    const bl = (o) => 
+      `<svg viewBox="0 0 90 100">
+        <path d="M22 52v28q0 8 8 8h30q8 0 8-8V52z" fill="#e0e0e0" stroke="#6b7c8c" stroke-width="3"/>
+        <rect x="38" y="44" width="14" height="10" fill="#bbb"/>
+        ${o ? `<ellipse cx="45" cy="26" rx="16" ry="20" fill="#f48fb1" stroke="#c2185b"/>` : ''}
+        <text x="45" y="98" font-size="9" text-anchor="middle" fill="#444">${o ? 'balon tertutup' : 'terbuka'}</text>
+      </svg>`;
+      
+    const el = 
+      `<svg viewBox="0 0 90 100">
+        <path d="M10 40v44q0 8 8 8h54q8 0 8-8V40" fill="#b3e5fc" opacity=".6" stroke="#6b7c8c" stroke-width="3"/>
+        <rect x="24" y="8" width="14" height="60" fill="#fff" stroke="#6b7c8c"/>
+        <rect x="52" y="8" width="14" height="60" fill="#fff" stroke="#6b7c8c"/>
+        <rect x="25" y="9" width="12" height="40" fill="#fff59d"/>
+        <rect x="53" y="9" width="12" height="20" fill="#ffcc80"/>
+        <text x="31" y="32" font-size="8" text-anchor="middle">H₂</text>
+        <text x="59" y="22" font-size="8" text-anchor="middle">O₂</text>
+        <text x="31" y="82" font-size="8" text-anchor="middle">−</text>
+        <text x="59" y="82" font-size="8" text-anchor="middle">+</text>
+      </svg>`;
+
+    // Konten Halaman
+    const pages = [
+      ['Sampul', 
+        `<div class="page cover">
+          ${sc2('', '').replace('<svg', '<svg width="120"').replace(/stroke="#546e7a"/g, 'stroke="#fff"').replace(/<text[^>]*>[^<]*<\/text>/g, '')}
+          <h1>MODUL PRAKTIKUM KIMIA<br>BERBASIS VIRTUAL LAB</h1>
+          <p style="font-size:1.15rem">Materi Hukum Dasar Kimia</p>
+          <p>Kelas X SMA/MA · Fase E</p>
+          <p style="margin-top:30px;font-size:.85rem">Nama: ____________________<br>Kelas/Kelompok: ____________</p>
+        </div>`
+      ],
+      ['Petunjuk & Capaian', 
+        `<div class="page">
+          <h2>Petunjuk Penggunaan Modul</h2>
+          <ol>
+            <li>Baca tujuan dan aturan keselamatan sebelum praktikum.</li>
+            <li>Lakukan praktikum nyata <i>atau</i> virtual (PhET) sesuai ketersediaan alat.</li>
+            <li>Ikuti gambar prosedur, timbang dengan teliti, dan catat data pada tabel.</li>
+            <li>Tonton video pendukung agar teknik kerja jelas.</li>
+            <li>Jawab pertanyaan diskusi dan buat kesimpulan.</li>
+          </ol>
+          <h3>Capaian Pembelajaran</h3>
+          <p>Peserta didik mampu membuktikan dan menerapkan hukum Lavoisier, Proust, Dalton, Gay-Lussac, dan Avogadro dalam perhitungan kimia.</p>
+          <h3>Daftar Kegiatan</h3>
+          <table>
+            <tr><th>No</th><th>Kegiatan</th><th>Hal.</th></tr>
+            <tr><td>1</td><td>Hukum Kekekalan Massa (Lavoisier)</td><td>5</td></tr>
+            <tr><td>2</td><td>Hukum Perbandingan Tetap (Proust)</td><td>6</td></tr>
+            <tr><td>3</td><td>Hukum Perbandingan Volume (Gay-Lussac)</td><td>7</td></tr>
+            <tr><td>4</td><td>Analisis Data Hukum Dalton</td><td>8</td></tr>
+            <tr><td>5</td><td>Praktikum virtual PhET</td><td>9</td></tr>
+          </table>
+          <span class="pg">2</span>
+        </div>`
+      ],
+      ['Keselamatan', 
+        `<div class="page">
+          <h2>Tujuan &amp; Keselamatan Kerja</h2>
+          <h3>Tujuan</h3>
+          <ul>
+            <li>Membuktikan massa zat sebelum dan sesudah reaksi.</li>
+            <li>Menunjukkan perbandingan massa unsur dalam senyawa tetap.</li>
+            <li>Membuktikan perbandingan volume gas pada elektrolisis air.</li>
+            <li>Menerapkan hukum Dalton dan Avogadro pada data.</li>
+          </ul>
+          <div class="box warn">
+            <b>Perhatian!</b>
+            <ul>
+              <li>Gunakan jas lab, kacamata pelindung, dan sarung tangan.</li>
+              <li>HCl 1 M bersifat korosif; jangan terkena kulit atau mata.</li>
+              <li>Gas hasil elektrolisis (H₂ dan O₂) mudah terbakar: <b>jangan dekatkan api</b>.</li>
+              <li>Gunakan baterai 9 V saja; jangan hubungkan langsung kedua kabel (korsleting).</li>
+              <li>Buang limbah pada wadah yang ditentukan guru.</li>
+            </ul>
+          </div>
+          <h3>Alat &amp; Bahan Umum</h3>
+          <p>Neraca digital (0,01 g), gelas kimia, botol 250 mL, balon, gelas ukur, tabung reaksi, baterai 9 V + kabel + elektroda grafit, soda kue (NaHCO₃), cuka, HCl 1 M, air suling, stopwatch.</p>
+          <span class="pg">3</span>
+        </div>`
+      ],
+      ['Dasar Teori', 
+        `<div class="page">
+          <h2>Dasar Teori Singkat</h2>
+          <ul>
+            <li><b>Lavoisier:</b> massa zat sebelum dan sesudah reaksi sama (sistem tertutup).</li>
+            <li><b>Proust:</b> perbandingan massa unsur dalam suatu senyawa selalu tetap. Contoh air: H : O = 1 : 8.</li>
+            <li><b>Dalton:</b> bila dua unsur membentuk lebih dari satu senyawa, massa unsur kedua (untuk massa unsur pertama tetap) berbanding sebagai bilangan bulat sederhana.</li>
+            <li><b>Gay-Lussac:</b> volume gas yang bereaksi dan hasil reaksi (T, P sama) berbanding sebagai bilangan bulat sederhana, sama dengan koefisien reaksi.</li>
+            <li><b>Avogadro:</b> gas bervolume sama (T, P sama) mengandung jumlah molekul sama.</li>
+          </ul>
+          <h3>Contoh: 2H₂ + O₂ → 2H₂O</h3>
+          <svg viewBox="0 0 320 70" width="100%">
+            <rect x="10" y="20" width="60" height="30" fill="#fff59d" stroke="#999"/>
+            <rect x="80" y="20" width="30" height="30" fill="#ffcc80" stroke="#999"/>
+            <text x="40" y="40" font-size="12" text-anchor="middle" font-family="Arial">2 L H₂</text>
+            <text x="95" y="40" font-size="12" text-anchor="middle" font-family="Arial">1 L O₂</text>
+            <text x="135" y="40" font-size="18" font-family="Arial">→</text>
+            <rect x="165" y="20" width="60" height="30" fill="#b3e5fc" stroke="#999"/>
+            <text x="195" y="40" font-size="12" text-anchor="middle" font-family="Arial">2 L uap air</text>
+          </svg>
+          <div class="box">Perbandingan volume H₂ : O₂ : H₂O = 2 : 1 : 2 (sama dengan perbandingan koefisien).</div>
+          <span class="pg">4</span>
+        </div>`
+      ],
+      ['Praktikum 1', 
+        `<div class="page">
+          <h2>Praktikum 1: Hukum Kekekalan Massa</h2>
+          <p><b>Tujuan:</b> membuktikan massa sebelum dan sesudah reaksi cuka + soda kue.</p>
+          <p><b>Reaksi:</b> NaHCO₃ + CH₃COOH → CH₃COONa + H₂O + CO₂</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(bk('#e0e0e0', 'cuka 50 mL', { h: 56 }), 'Masukkan 50 mL cuka ke botol 250 mL', 1)}
+            ${fig(bl(true), 'Isi balon dengan 2 sendok teh soda kue, pasang di mulut botol (soda belum jatuh)', 2)}
+            ${fig(sc2('botol', 'balon'), 'Timbang seluruh rangkaian: massa awal (m₁)', 3)}
+            ${fig(bl(true), 'Angkat balon agar soda jatuh, reaksi, balon mengembang. Timbang lagi: m₂', 4)}
+          </div>
+          <h3>Tabel Pengamatan</h3>
+          <table class="fill">
+            <tr><th>Kondisi</th><th>Massa awal m₁ (g)</th><th>Massa akhir m₂ (g)</th></tr>
+            <tr><td>Sistem tertutup (balon)</td><td></td><td></td></tr>
+            <tr><td>Sistem terbuka (tanpa balon)</td><td></td><td></td></tr>
+          </table>
+          <p><b>Diskusi:</b> mengapa massa pada sistem terbuka berkurang? Ke mana perginya massa itu? Apa kesimpulan hukum Lavoisier?</p>
+          <span class="pg">5</span>
+        </div>`
+      ],
+      ['Praktikum 2', 
+        `<div class="page">
+          <h2>Praktikum 2: Hukum Perbandingan Tetap</h2>
+          <p><b>Tujuan:</b> menunjukkan perbandingan massa NaHCO₃ terhadap CO₂ yang dihasilkan selalu tetap.</p>
+          <p><b>Reaksi:</b> NaHCO₃ + HCl (berlebih) → NaCl + H₂O + CO₂↑</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(bk('#e0e0e0', 'HCl 1 M', { h: 48 }), 'Tuang 30 mL HCl 1 M (berlebih) ke gelas kimia, tutup longgar dengan kapas', 1)}
+            ${fig(sc2('NaHCO₃', '1,0 g'), 'Timbang NaHCO₃ 1,0 g; 2,0 g; 3,0 g masing-masing pada kertas', 2)}
+            ${fig(sc2('gelas', 'm₁'), 'Timbang gelas + HCl + kertas NaHCO₃ (m₁)', 3)}
+            ${fig(tab('#e0e0e0', 'reaksi', bub), 'Masukkan sedikit demi sedikit hingga gas habis. Timbang lagi (m₂)', 4)}
+          </div>
+          <h3>Tabel Pengamatan</h3>
+          <table class="fill">
+            <tr><th>m NaHCO₃ (g)</th><th>m₁ (g)</th><th>m₂ (g)</th><th>m CO₂ = m₁−m₂</th><th>m CO₂ : m NaHCO₃</th></tr>
+            <tr><td>1,0</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>2,0</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>3,0</td><td></td><td></td><td></td><td></td></tr>
+          </table>
+          <p><b>Diskusi:</b> bandingkan rasio ketiga percobaan (teori ≈ 0,52). Apa arti rasio yang hampir sama?</p>
+          <span class="pg">6</span>
+        </div>`
+      ],
+      ['Praktikum 3', 
+        `<div class="page">
+          <h2>Praktikum 3: Perbandingan Volume Gas</h2>
+          <p><b>Tujuan:</b> membuktikan perbandingan volume H₂ : O₂ pada elektrolisis air (Gay-Lussac).</p>
+          <p><b>Reaksi:</b> 2H₂O → 2H₂ + O₂</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(bk('#b3e5fc', 'air+soda kue', { h: 40 }), 'Larutkan 1 sendok teh soda kue dalam 200 mL air di gelas kimia', 1)}
+            ${fig(el, 'Tegakkan dua tabung reaksi penuh larutan terbalik di atas dua elektroda grafit', 2)}
+            ${fig(ph('#fff9c4', '9 V'), 'Hubungkan elektroda ke baterai 9 V (−/+), biarkan 10–15 menit', 3)}
+            ${fig(sw('catat V'), 'Catat volume gas di tiap tabung tiap 3 menit', 4)}
+          </div>
+          <h3>Tabel Pengamatan</h3>
+          <table class="fill">
+            <tr><th>Waktu (menit)</th><th>V gas katoda H₂ (mL)</th><th>V gas anoda O₂ (mL)</th><th>Perbandingan</th></tr>
+            <tr><td>3</td><td></td><td></td><td></td></tr>
+            <tr><td>6</td><td></td><td></td><td></td></tr>
+            <tr><td>9</td><td></td><td></td><td></td></tr>
+          </table>
+          <p><b>Diskusi:</b> mengapa volume H₂ sekitar dua kali volume O₂? Hubungkan dengan koefisien reaksi dan hukum Avogadro.</p>
+          <span class="pg">7</span>
+        </div>`
+      ],
+      ['Praktikum 4', 
+        `<div class="page">
+          <h2>Kegiatan 4: Analisis Data Hukum Dalton</h2>
+          <p><b>Tujuan:</b> membuktikan hukum kelipatan perbandingan dari data tiga senyawa nitrogen–oksigen.</p>
+          <h3>Data</h3>
+          <table>
+            <tr><th>Senyawa</th><th>Massa N (g)</th><th>Massa O (g)</th></tr>
+            <tr><td>I</td><td>28</td><td>16</td></tr>
+            <tr><td>II</td><td>14</td><td>16</td></tr>
+            <tr><td>III</td><td>7</td><td>16</td></tr>
+          </table>
+          <h3>Langkah Analisis</h3>
+          <div class="steps">
+            ${fig(sc2('N', 'O'), 'Samakan massa N tetap (misal 14 g)', 1)}
+            ${fig(bk('#ffcc80', 'hitung O', { h: 44 }), 'Hitung massa O yang bereaksi dengan 14 g N pada tiap senyawa', 2)}
+            ${fig(sw('rasio'), 'Tentukan perbandingan massa O (bilangan bulat sederhana)', 3)}
+          </div>
+          <h3>Tabel Hasil</h3>
+          <table class="fill">
+            <tr><th>Senyawa</th><th>Massa N (g)</th><th>Massa O (g)</th></tr>
+            <tr><td>I</td><td>14</td><td></td></tr>
+            <tr><td>II</td><td>14</td><td></td></tr>
+            <tr><td>III</td><td>14</td><td></td></tr>
+          </table>
+          <p><b>Perbandingan O =</b> ____ : ____ : ____</p>
+          <div class="box">Petunjuk: untuk 14 g N, massa O senyawa I = 16 × 14/28. Lanjutkan, lalu sederhanakan.</div>
+          <span class="pg">8</span>
+        </div>`
+      ],
+      ['Virtual Lab PhET', 
+        `<div class="page">
+          <h2>Praktikum Virtual (Virtual Lab)</h2>
+          <p>Gunakan simulasi PhET (Universitas Colorado) bila alat/bahan terbatas. Dapat dijalankan di browser tanpa instalasi.</p>
+          <a class="vid" href="https://phet.colorado.edu/in/simulations/balancing-chemical-equations" target="_blank" rel="noopener">
+            <b>▶ PhET:</b> Menyetarakan Persamaan Kimia<span>phet.colorado.edu/in/simulations/balancing-chemical-equations</span>
+          </a>
+          <a class="vid" href="https://phet.colorado.edu/in/simulations/reactants-products-and-leftovers" target="_blank" rel="noopener">
+            <b>▶ PhET:</b> Pereaksi, Produk, dan Sisa<span>phet.colorado.edu/in/simulations/reactants-products-and-leftovers</span>
+          </a>
+          <h3>Langkah Kerja Virtual</h3>
+          <div class="steps">
+            ${fig(bk('#cfd8dc', 'buka simulasi', { h: 44 }), 'Buka tautan PhET, pilih bahasa Indonesia', 1)}
+            ${fig(sc2('kiri', 'kanan'), 'Setarakan persamaan reaksi agar jumlah atom kiri = kanan', 2)}
+            ${fig(bk('#ffcdd2', 'atur jumlah', { h: 44 }), 'Pilih reaksi, atur jumlah pereaksi, amati produk dan sisa', 3)}
+            ${fig(sw('data'), 'Catat data dan hitung rasio massa/mol', 4)}
+          </div>
+          <h3>Tugas</h3>
+          <ol>
+            <li>Setarakan N₂ + H₂ → NH₃, lalu hubungkan koefisien dengan perbandingan volume.</li>
+            <li>Atur jumlah pereaksi tidak seimbang: pereaksi mana yang habis (pembatas) dan mana yang sisa?</li>
+            <li>Apa hubungan hasil simulasi dengan hukum Lavoisier dan Proust?</li>
+          </ol>
+          <span class="pg">9</span>
+        </div>`
+      ],
+      ['Video Pendukung', 
+        `<div class="page">
+          <h2>Video Pendukung (YouTube)</h2>
+          <p>Klik untuk membuka video panduan di YouTube. Tautan menuju hasil pencarian terkurasi, sehingga Anda dapat memilih video yang sesuai; guru dapat menggantinya dengan video pilihan sendiri.</p>
+          <a class="vid" href="${yt('praktikum hukum kekekalan massa Lavoisier cuka soda kue balon')}" target="_blank" rel="noopener">
+            <b>▶ Video 1</b> Hukum Lavoisier<span>Mendukung Praktikum 1</span>
+          </a>
+          <a class="vid" href="${yt('praktikum hukum perbandingan tetap Proust')}" target="_blank" rel="noopener">
+            <b>▶ Video 2</b> Hukum Proust<span>Mendukung Praktikum 2</span>
+          </a>
+          <a class="vid" href="${yt('elektrolisis air hukum Gay Lussac perbandingan volume')}" target="_blank" rel="noopener">
+            <b>▶ Video 3</b> Elektrolisis air &amp; Gay-Lussac<span>Mendukung Praktikum 3</span>
+          </a>
+          <a class="vid" href="${yt('hukum dasar kimia Dalton Avogadro penjelasan soal')}" target="_blank" rel="noopener">
+            <b>▶ Video 4</b> Hukum Dalton &amp; Avogadro<span>Mendukung Kegiatan 4</span>
+          </a>
+          <a class="vid" href="${yt('tutorial PhET balancing chemical equations menyetarakan persamaan reaksi')}" target="_blank" rel="noopener">
+            <b>▶ Video 5</b> Tutorial PhET menyetarakan reaksi<span>Mendukung Praktikum Virtual</span>
+          </a>
+          <a class="vid" href="${yt('keselamatan kerja laboratorium kimia')}" target="_blank" rel="noopener">
+            <b>▶ Video 6</b> Keselamatan kerja di laboratorium<span>Wajib ditonton sebelum praktikum</span>
+          </a>
+          <span class="pg">10</span>
+        </div>`
+      ],
+      ['Evaluasi', 
+        `<div class="page">
+          <h2>Evaluasi &amp; Kesimpulan</h2>
+          <h3>Pertanyaan</h3>
+          <ol>
+            <li>4 g hidrogen direaksikan dengan 40 g oksigen (H : O = 1 : 8). Berapa gram air terbentuk dan zat apa yang bersisa?</li>
+            <li>Mengapa pita magnesium yang dibakar di udara terbuka massanya bertambah?</li>
+            <li>10 L N₂ bereaksi dengan H₂ membentuk NH₃ (N₂ + 3H₂ → 2NH₃). Tentukan volume H₂ yang diperlukan dan NH₃ yang terbentuk.</li>
+            <li>Jelaskan perbedaan hukum Proust dan hukum Dalton.</li>
+            <li>Apa keunggulan dan keterbatasan praktikum virtual dibanding praktikum nyata?</li>
+          </ol>
+          <h3>Kesimpulan Kelompok</h3>
+          <div class="box" style="height:100px"></div>
+          <h3>Rubrik Penilaian</h3>
+          <table>
+            <tr><th>Aspek</th><th>Skor</th></tr>
+            <tr><td>Persiapan &amp; keselamatan kerja</td><td>20</td></tr>
+            <tr><td>Ketepatan prosedur &amp; penimbangan</td><td>25</td></tr>
+            <tr><td>Data &amp; analisis</td><td>30</td></tr>
+            <tr><td>Kesimpulan &amp; laporan</td><td>25</td></tr>
+          </table>
+          <span class="pg">11</span>
+        </div>`
+      ],
+      ['Daftar Pustaka', 
+        `<div class="page">
+          <h2>Daftar Pustaka</h2>
+          <ul>
+            <li>Chang, R. (2010). <i>Chemistry</i>. McGraw-Hill.</li>
+            <li>Brown, T. L., dkk. (2018). <i>Chemistry: The Central Science</i>. Pearson.</li>
+            <li>Kemendikbudristek. (2022). <i>Buku Kimia SMA/MA Kelas X</i>.</li>
+            <li>PhET Interactive Simulations, University of Colorado Boulder. https://phet.colorado.edu</li>
+          </ul>
+          <div class="box">Modul ini adalah draf yang dapat disesuaikan dengan alat, bahan, dan kurikulum sekolah Anda.</div>
+          <span class="pg">12</span>
+        </div>`
+      ]
+    ];
+
+    let i = 0, busy = false;
+    const bookEl = document.getElementById('book'), 
+          jump = document.getElementById('jump'), 
+          cnt = document.getElementById('cnt');
+          
+    pages.forEach((p, k) => jump.add(new Option((k + 1) + '. ' + p[0], k)));
+    
+    function show(n, dir) {
+      if (busy || n < 0 || n >= pages.length) return;
+      busy = true;
+      const old = bookEl.firstElementChild;
+      
+      const put = () => {
+        bookEl.innerHTML = pages[n][1];
+        const el = bookEl.firstElementChild;
+        
+        if (dir) el.classList.add(dir > 0 ? 'in' : 'inb');
+        
+        i = n;
+        jump.value = n;
+        cnt.textContent = (n + 1) + '/' + pages.length;
+        document.getElementById('prev').disabled = (n == 0);
+        document.getElementById('next').disabled = (n == pages.length - 1);
+        scrollTo(0, 0);
+        busy = false;
+      };
+      
+      if (old && dir) {
+        old.classList.add(dir > 0 ? 'out' : 'outb');
+        setTimeout(put, 330);
+      } else {
+        put();
+      }
+    }
+    
+    document.getElementById('prev').onclick = () => show(i - 1, -1);
+    document.getElementById('next').onclick = () => show(i + 1, 1);
+    jump.onchange = () => show(+jump.value, +jump.value > i ? 1 : -1);
+    
+    addEventListener('keydown', e => {
+      if (e.key == 'ArrowRight') show(i + 1, 1);
+      if (e.key == 'ArrowLeft') show(i - 1, -1);
+    });
+    
+    let sx = 0;
+    bookEl.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+    bookEl.addEventListener('touchend', e => {
+      const d = e.changedTouches[0].clientX - sx;
+      if (d < -60) show(i + 1, 1);
+      if (d > 60) show(i - 1, -1);
+    });
+    
+    show(0, 0);
+  </script>
+</body>
+</html>

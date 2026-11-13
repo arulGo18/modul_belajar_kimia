@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Modul Praktikum Kimia Berbasis Virtual Lab: Asam Basa</title>
+  <style>
+    :root {
+      --bg: #e8eef4;
+      --paper: #fffdf8;
+      --ink: #1f2933;
+      --mut: #5b6b7a;
+      --acc: #0f766e;
+      --acc2: #b45309;
+      --line: #d8e0e7;
+      --box: #ecf6f4;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10171d;
+        --mut: #8da0b0;
+      }
+    }
+    
+    :root[data-theme="dark"] {
+      --bg: #10171d;
+      --mut: #8da0b0;
+    }
+    
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+    
+    #book {
+      perspective: 1800px;
+      width: 100%;
+      max-width: 640px;
+    }
+    
+    .page {
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 6px 14px 14px 6px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 8px 0 12px -8px rgba(0,0,0,.25);
+      padding: 26px 24px 20px;
+      min-height: 600px;
+      transform-origin: left center;
+      position: relative;
+    }
+    
+    .page.out { animation: out .35s ease-in forwards; }
+    .page.in { animation: inn .35s ease-out; }
+    .page.outb { animation: outb .35s ease-in forwards; }
+    .page.inb { animation: innb .35s ease-out; }
+    
+    @keyframes out { to { transform: rotateY(-70deg); opacity: 0; } }
+    @keyframes inn { from { transform: rotateY(60deg); opacity: 0; } }
+    @keyframes outb { to { transform: rotateY(70deg); opacity: 0; } }
+    @keyframes innb { from { transform: rotateY(-60deg); opacity: 0; } }
+    
+    h1, h2, h3 {
+      font-family: 'Trebuchet MS', Arial, sans-serif;
+      margin: .2em 0 .5em;
+    }
+    
+    h2 {
+      color: var(--acc);
+      font-size: 1.35rem;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 6px;
+    }
+    
+    h3 {
+      font-size: 1.02rem;
+      color: var(--acc2);
+      margin-top: 1em;
+    }
+    
+    p, li {
+      line-height: 1.55;
+      font-size: .95rem;
+    }
+    
+    ul, ol {
+      padding-left: 20px;
+      margin: .4em 0;
+    }
+    
+    .box {
+      background: var(--box);
+      border-left: 4px solid var(--acc);
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: .92rem;
+    }
+    
+    .warn {
+      background: #fff3e0;
+      border-left-color: #e65100;
+      color: #4a2a00;
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: .85rem;
+      margin: 8px 0;
+    }
+    
+    th, td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
+      text-align: left;
+    }
+    
+    th {
+      background: var(--box);
+    }
+    
+    .fill td {
+      height: 26px;
+    }
+    
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+    }
+    
+    figure {
+      margin: 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: .78rem;
+      color: var(--mut);
+      background: #f4f8fb;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px;
+    }
+    
+    figure svg {
+      width: 100%;
+      height: auto;
+      max-height: 110px;
+    }
+    
+    figcaption b {
+      color: var(--acc);
+    }
+    
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(160deg, #0f766e, #134e4a);
+      color: #fff;
+    }
+    
+    .cover h1 {
+      font-size: 1.7rem;
+      line-height: 1.25;
+    }
+    
+    .cover p {
+      color: #d6f1ec;
+    }
+    
+    a.vid {
+      display: block;
+      margin: 8px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--ink);
+      background: #fff;
+    }
+    
+    a.vid b {
+      color: #c62828;
+    }
+    
+    a.vid span {
+      display: block;
+      font-size: .8rem;
+      color: var(--mut);
+      font-family: Arial, sans-serif;
+    }
+    
+    .nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .nav button {
+      background: var(--acc);
+      color: #fff;
+      border: 0;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+    
+    .nav button:disabled {
+      opacity: .35;
+    }
+    
+    .nav select {
+      padding: 8px;
+      border-radius: 8px;
+      max-width: 160px;
+    }
+    
+    .nav span {
+      color: var(--mut);
+      font-size: .85rem;
+    }
+    
+    .pg {
+      position: absolute;
+      bottom: 6px;
+      right: 14px;
+      font: .72rem Arial;
+      color: var(--mut);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="book"></div>
+  
+  <div class="nav">
+    <button id="prev">‹ Sebelumnya</button>
+    <select id="jump"></select>
+    <span id="cnt"></span>
+    <button id="next">Berikutnya ›</button>
+  </div>
+
+  <script>
+    const yt = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+    
+    // ilustrasi gelas kimia
+    const bk = (c, l, o = {}) => 
+      `<svg viewBox="0 0 90 100">
+        <path d="M22 18v62q0 8 8 8h30q8 0 8-8V18" fill="none" stroke="#6b7c8c" stroke-width="3"/>
+        <path d="M24 ${o.h || 48}v32q0 6 6 6h30q6 0 6-6V${o.h || 48}z" fill="${c}" opacity=".85"/>
+        ${o.drop ? `<path d="M45 4q-6 9-6 13a6 6 0 0012 0q0-4-6-13z" fill="${o.drop}"/>` : ''}
+        ${o.paper ? `<rect x="52" y="6" width="9" height="40" fill="${o.paper}" stroke="#555" transform="rotate(12 56 26)"/>` : ''}
+        <text x="45" y="97" font-size="9" text-anchor="middle" fill="#444">${l}</text>
+      </svg>`;
+      
+    const fig = (svg, t, n) => 
+      `<figure>
+        ${svg}
+        <figcaption><b>${n}.</b> ${t}</figcaption>
+      </figure>`;
+      
+    const tit = 
+      `<svg viewBox="0 0 90 100">
+        <rect x="40" y="2" width="10" height="46" fill="#e8f1f8" stroke="#6b7c8c" stroke-width="2"/>
+        <rect x="41" y="20" width="8" height="28" fill="#f8c8d4"/>
+        <path d="M45 48v8" stroke="#6b7c8c" stroke-width="2"/>
+        <circle cx="45" cy="60" r="2.5" fill="#f06292"/>
+        <path d="M35 68h20l10 22q2 6-4 6H29q-6 0-4-6z" fill="#f8c8d4" stroke="#6b7c8c" stroke-width="2.5"/>
+      </svg>`;
+      
+    const ph = (c, v) => 
+      `<svg viewBox="0 0 90 100">
+        <rect x="38" y="4" width="14" height="60" rx="4" fill="#cfd8dc" stroke="#607d8b" stroke-width="2"/>
+        <rect x="42" y="64" width="6" height="22" fill="#90a4ae"/>
+        <rect x="30" y="14" width="30" height="16" fill="${c}"/>
+        <text x="45" y="26" font-size="11" text-anchor="middle" fill="#000">${v}</text>
+      </svg>`;
+      
+    const sc = [ // skala pH
+      ['#d32f2f', '1-2'], ['#ef6c00', '3-4'], ['#fbc02d', '5-6'], ['#7cb342', '7'], 
+      ['#26a69a', '8-9'], ['#1e88e5', '10-11'], ['#6a1b9a', '12-14']
+    ];
+
+    const pages = [
+      ['Sampul', 
+        `<div class="page cover">
+          <svg viewBox="0 0 90 100" width="110">
+            <path d="M22 18v62q0 8 8 8h30q8 0 8-8V18" fill="none" stroke="#fff" stroke-width="3"/>
+            <path d="M24 50v30q0 6 6 6h30q6 0 6-6V50z" fill="#f48fb1"/>
+            <circle cx="40" cy="62" r="3" fill="#fff"/>
+            <circle cx="52" cy="70" r="2" fill="#fff"/>
+          </svg>
+          <h1>MODUL PRAKTIKUM KIMIA<br>BERBASIS VIRTUAL LAB</h1>
+          <p style="font-size:1.15rem">Materi Asam Basa</p>
+          <p>Kelas XI SMA/MA · Fase F</p>
+          <p style="margin-top:30px;font-size:.85rem">Nama: ____________________<br>Kelas/Kelompok: ____________</p>
+        </div>`
+      ],
+      ['Petunjuk & Capaian', 
+        `<div class="page">
+          <h2>Petunjuk Penggunaan Modul</h2>
+          <ol>
+            <li>Baca tujuan dan aturan keselamatan sebelum praktikum.</li>
+            <li>Lakukan praktikum nyata <i>atau</i> virtual (PhET) sesuai ketersediaan alat.</li>
+            <li>Ikuti gambar prosedur langkah demi langkah dan catat data pada tabel pengamatan.</li>
+            <li>Tonton video pendukung pada halaman Video untuk memperjelas teknik kerja.</li>
+            <li>Jawab pertanyaan diskusi dan buat kesimpulan.</li>
+          </ol>
+          <h3>Capaian Pembelajaran</h3>
+          <p>Peserta didik mampu menjelaskan sifat larutan asam dan basa, menentukan pH, serta melakukan titrasi asam-basa untuk menentukan konsentrasi larutan.</p>
+          <h3>Daftar Kegiatan</h3>
+          <table>
+            <tr><th>No</th><th>Kegiatan</th><th>Hal.</th></tr>
+            <tr><td>1</td><td>Identifikasi asam basa dengan indikator alami</td><td>5</td></tr>
+            <tr><td>2</td><td>Penentuan pH dengan indikator universal &amp; pH meter</td><td>6</td></tr>
+            <tr><td>3</td><td>Titrasi asam kuat–basa kuat</td><td>7</td></tr>
+            <tr><td>4</td><td>Praktikum virtual PhET</td><td>8</td></tr>
+          </table>
+          <span class="pg">2</span>
+        </div>`
+      ],
+      ['Keselamatan', 
+        `<div class="page">
+          <h2>Tujuan &amp; Keselamatan Kerja</h2>
+          <h3>Tujuan</h3>
+          <ul>
+            <li>Mengidentifikasi larutan asam, basa, dan netral memakai indikator.</li>
+            <li>Menentukan pH larutan secara kualitatif dan kuantitatif.</li>
+            <li>Menentukan konsentrasi asam dengan titrasi.</li>
+          </ul>
+          <div class="box warn">
+            <b>Perhatian!</b>
+            <ul>
+              <li>Gunakan jas lab, kacamata pelindung, dan sarung tangan.</li>
+              <li>HCl dan NaOH bersifat korosif: jangan terkena kulit, mata, atau tertelan.</li>
+              <li>Jangan mencicipi bahan kimia; jangan memipet dengan mulut.</li>
+              <li>Jika terkena kulit, bilas air mengalir ±15 menit dan lapor guru.</li>
+              <li>Buang limbah pada wadah yang ditentukan guru.</li>
+            </ul>
+          </div>
+          <h3>Alat &amp; Bahan Umum</h3>
+          <p>Gelas kimia, tabung reaksi + rak, pipet tetes, gelas ukur, buret, statif, erlenmeyer, kertas indikator universal, pH meter, HCl 0,1 M, NaOH 0,1 M, cuka, air jeruk, sabun, larutan soda kue, air suling, indikator fenolftalein (PP).</p>
+          <span class="pg">3</span>
+        </div>`
+      ],
+      ['Dasar Teori', 
+        `<div class="page">
+          <h2>Dasar Teori Singkat</h2>
+          <ul>
+            <li><b>Arrhenius:</b> asam melepas H⁺ dalam air; basa melepas OH⁻.</li>
+            <li><b>Brønsted–Lowry:</b> asam donor proton, basa akseptor proton.</li>
+            <li><b>pH</b> = −log [H⁺]; <b>pOH</b> = −log [OH⁻]; pH + pOH = 14 (25 °C).</li>
+            <li><b>Titrasi:</b> pada titik ekuivalen mol H⁺ = mol OH⁻, sehingga <b>M<sub>a</sub>·V<sub>a</sub>·n<sub>a</sub> = M<sub>b</sub>·V<sub>b</sub>·n<sub>b</sub></b>.</li>
+          </ul>
+          <h3>Skala pH &amp; Warna Indikator Universal</h3>
+          <svg viewBox="0 0 350 60" width="100%">
+            ${sc.map((s, i) => `<rect x="${i * 50}" y="8" width="50" height="30" fill="${s[0]}"/><text x="${i * 50 + 25}" y="28" font-size="11" fill="#fff" text-anchor="middle" font-family="Arial">${s[1]}</text>`).join('')}
+            <text x="2" y="54" font-size="10" fill="#777">asam kuat</text>
+            <text x="148" y="54" font-size="10" fill="#777">netral</text>
+            <text x="282" y="54" font-size="10" fill="#777">basa kuat</text>
+          </svg>
+          <div class="box">Contoh: HCl 0,01 M → [H⁺]=10⁻² → pH = 2. NaOH 0,001 M → pOH = 3 → pH = 11.</div>
+          <span class="pg">4</span>
+        </div>`
+      ],
+      ['Praktikum 1', 
+        `<div class="page">
+          <h2>Praktikum 1: Indikator Alami</h2>
+          <p><b>Tujuan:</b> menguji sifat asam/basa larutan memakai ekstrak kubis ungu.</p>
+          <p><b>Bahan:</b> kubis ungu, air panas, cuka, air jeruk, air suling, larutan sabun, soda kue, 7 tabung reaksi.</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(bk('#7b1fa2', 'kubis ungu', { h: 40 }), 'Blender/remas kubis ungu dengan air panas, saring ekstraknya', 1)}
+            ${fig(bk('#e0e0e0', 'sampel', { drop: '#7b1fa2' }), 'Tuang 5 mL tiap sampel ke tabung reaksi berlabel', 2)}
+            ${fig(bk('#e91e63', 'asam'), 'Teteskan 5 tetes ekstrak ke tiap tabung, goyangkan', 3)}
+            ${fig(bk('#1e88e5', 'basa'), 'Amati dan catat perubahan warna', 4)}
+          </div>
+          <h3>Tabel Pengamatan</h3>
+          <table class="fill">
+            <tr><th>Sampel</th><th>Warna</th><th>Sifat</th></tr>
+            <tr><td>Cuka</td><td></td><td></td></tr>
+            <tr><td>Air jeruk</td><td></td><td></td></tr>
+            <tr><td>Air suling</td><td></td><td></td></tr>
+            <tr><td>Larutan sabun</td><td></td><td></td></tr>
+            <tr><td>Soda kue</td><td></td><td></td></tr>
+          </table>
+          <p><b>Diskusi:</b> mengapa ekstrak kubis ungu dapat berubah warna? Urutkan sampel dari paling asam ke paling basa.</p>
+          <span class="pg">5</span>
+        </div>`
+      ],
+      ['Praktikum 2', 
+        `<div class="page">
+          <h2>Praktikum 2: Penentuan pH</h2>
+          <p><b>Tujuan:</b> menentukan pH larutan dengan indikator universal dan pH meter.</p>
+          <p><b>Bahan:</b> HCl 0,1 M, CH₃COOH 0,1 M, air suling, NaOH 0,1 M, NH₃ 0,1 M, kertas indikator universal, pH meter.</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(bk('#cfd8dc', 'larutan', { h: 44 }), 'Siapkan 5 gelas kimia berisi 20 mL tiap larutan', 1)}
+            ${fig(bk('#cfd8dc', 'celup', { h: 44, paper: '#fdd835' }), 'Celupkan kertas indikator, cocokkan warna dengan skala', 2)}
+            ${fig(ph('#c8e6c9', 'pH?'), 'Kalibrasi pH meter (buffer 4 &amp; 7), bilas elektroda', 3)}
+            ${fig(ph('#c8e6c9', '2,9'), 'Celupkan elektroda, tunggu stabil, catat pH', 4)}
+          </div>
+          <h3>Tabel Pengamatan</h3>
+          <table class="fill">
+            <tr><th>Larutan</th><th>pH kertas</th><th>pH meter</th></tr>
+            <tr><td>HCl 0,1 M</td><td></td><td></td></tr>
+            <tr><td>CH₃COOH 0,1 M</td><td></td><td></td></tr>
+            <tr><td>Air suling</td><td></td><td></td></tr>
+            <tr><td>NH₃ 0,1 M</td><td></td><td></td></tr>
+            <tr><td>NaOH 0,1 M</td><td></td><td></td></tr>
+          </table>
+          <p><b>Diskusi:</b> mengapa pH HCl dan CH₃COOH berbeda walau konsentrasinya sama? Hubungkan dengan kekuatan asam (α dan Ka).</p>
+          <span class="pg">6</span>
+        </div>`
+      ],
+      ['Praktikum 3: Titrasi', 
+        `<div class="page">
+          <h2>Praktikum 3: Titrasi Asam–Basa</h2>
+          <p><b>Tujuan:</b> menentukan konsentrasi larutan HCl dengan NaOH standar 0,1 M.</p>
+          <p><b>Alat/bahan:</b> buret 50 mL, statif &amp; klem, erlenmeyer 100 mL, pipet volume 10 mL, corong, indikator PP, HCl (konsentrasi dicari), NaOH 0,1 M.</p>
+          <h3>Prosedur (bergambar)</h3>
+          <div class="steps">
+            ${fig(tit, 'Bilas buret dengan NaOH, isi hingga skala 0,00 mL tanpa gelembung', 1)}
+            ${fig(bk('#e0e0e0', '10 mL HCl', { h: 56 }), 'Pipet 10 mL HCl ke erlenmeyer', 2)}
+            ${fig(bk('#e0e0e0', '+ 2 tetes PP', { h: 56, drop: '#f06292' }), 'Tambahkan 2–3 tetes indikator PP (tak berwarna)', 3)}
+            ${fig(bk('#f8bbd0', 'merah muda', { h: 56 }), 'Titrasi sambil digoyang hingga merah muda tetap 30 detik; catat volume', 4)}
+          </div>
+          <h3>Data Pengamatan</h3>
+          <table class="fill">
+            <tr><th>Percobaan</th><th>V HCl (mL)</th><th>V NaOH (mL)</th></tr>
+            <tr><td>1</td><td>10</td><td></td></tr>
+            <tr><td>2</td><td>10</td><td></td></tr>
+            <tr><td>3</td><td>10</td><td></td></tr>
+          </table>
+          <div class="box">Olah data: M HCl = (M NaOH × V rata-rata NaOH) ÷ V HCl. Ulangi minimal 3 kali (simplo/duplo/triplo).</div>
+          <span class="pg">7</span>
+        </div>`
+      ],
+      ['Virtual Lab PhET', 
+        `<div class="page">
+          <h2>Praktikum Virtual (Virtual Lab)</h2>
+          <p>Gunakan simulasi PhET (Universitas Colorado) bila alat laboratorium terbatas. Simulasi dapat dijalankan di browser tanpa instalasi.</p>
+          <a class="vid" href="https://phet.colorado.edu/in/simulations/acid-base-solutions" target="_blank" rel="noopener">
+            <b>▶ PhET:</b> Larutan Asam-Basa<span>phet.colorado.edu/in/simulations/acid-base-solutions</span>
+          </a>
+          <a class="vid" href="https://phet.colorado.edu/in/simulations/ph-scale" target="_blank" rel="noopener">
+            <b>▶ PhET:</b> Skala pH<span>phet.colorado.edu/in/simulations/ph-scale</span>
+          </a>
+          <h3>Langkah Kerja Virtual</h3>
+          <div class="steps">
+            ${fig(bk('#cfd8dc', 'buka simulasi', { h: 44 }), 'Buka tautan PhET, pilih bahasa Indonesia', 1)}
+            ${fig(bk('#ffcdd2', 'pilih larutan', { h: 44 }), 'Pilih zat: asam kuat, asam lemah, basa kuat, basa lemah', 2)}
+            ${fig(ph('#ffe0b2', 'pH'), 'Atur konsentrasi, ukur pH dengan probe', 3)}
+            ${fig(bk('#c5cae9', 'molekul', { h: 44 }), 'Aktifkan tampilan molekul &amp; bandingkan jumlah ion', 4)}
+          </div>
+          <h3>Tugas</h3>
+          <ol>
+            <li>Bandingkan pH HCl 0,1 M dan asam lemah 0,1 M; jelaskan perbedaan jumlah ion H₃O⁺.</li>
+            <li>Catat pH tiga cairan rumah tangga pada simulasi Skala pH.</li>
+            <li>Ubah volume air: apa yang terjadi pada pH saat larutan diencerkan?</li>
+          </ol>
+          <span class="pg">8</span>
+        </div>`
+      ],
+      ['Video Pendukung', 
+        `<div class="page">
+          <h2>Video Pendukung (YouTube)</h2>
+          <p>Klik untuk membuka video panduan di YouTube. Tautan menuju hasil pencarian terkurasi, sehingga Anda dapat memilih video yang sesuai; guru dapat menggantinya dengan video pilihan sendiri.</p>
+          <a class="vid" href="${yt('praktikum indikator asam basa kubis ungu')}" target="_blank" rel="noopener">
+            <b>▶ Video 1</b> Indikator alami kubis ungu<span>Mendukung Praktikum 1</span>
+          </a>
+          <a class="vid" href="${yt('cara menentukan pH dengan kertas indikator universal dan pH meter')}" target="_blank" rel="noopener">
+            <b>▶ Video 2</b> Penentuan pH: indikator universal &amp; pH meter<span>Mendukung Praktikum 2</span>
+          </a>
+          <a class="vid" href="${yt('praktikum titrasi asam basa HCl NaOH fenolftalein')}" target="_blank" rel="noopener">
+            <b>▶ Video 3</b> Teknik titrasi asam–basa<span>Mendukung Praktikum 3</span>
+          </a>
+          <a class="vid" href="${yt('tutorial PhET simulasi asam basa virtual lab kimia')}" target="_blank" rel="noopener">
+            <b>▶ Video 4</b> Tutorial PhET asam basa<span>Mendukung Praktikum Virtual</span>
+          </a>
+          <a class="vid" href="${yt('keselamatan kerja laboratorium kimia')}" target="_blank" rel="noopener">
+            <b>▶ Video 5</b> Keselamatan kerja di laboratorium<span>Wajib ditonton sebelum praktikum</span>
+          </a>
+          <span class="pg">9</span>
+        </div>`
+      ],
+      ['Evaluasi', 
+        `<div class="page">
+          <h2>Evaluasi &amp; Kesimpulan</h2>
+          <h3>Pertanyaan</h3>
+          <ol>
+            <li>Hitung pH larutan HCl 0,02 M dan Ba(OH)₂ 0,005 M.</li>
+            <li>Mengapa titrasi dihentikan saat warna merah muda bertahan 30 detik?</li>
+            <li>Sebanyak 15 mL NaOH 0,1 M menetralkan 10 mL HCl. Tentukan konsentrasi HCl.</li>
+            <li>Apa kelebihan dan keterbatasan praktikum virtual dibanding praktikum nyata?</li>
+            <li>Berikan dua contoh penerapan asam basa dalam kehidupan sehari-hari.</li>
+          </ol>
+          <h3>Kesimpulan Kelompok</h3>
+          <div class="box" style="height:110px"></div>
+          <h3>Rubrik Penilaian</h3>
+          <table>
+            <tr><th>Aspek</th><th>Skor</th></tr>
+            <tr><td>Persiapan &amp; keselamatan kerja</td><td>20</td></tr>
+            <tr><td>Ketepatan prosedur</td><td>25</td></tr>
+            <tr><td>Data &amp; analisis</td><td>30</td></tr>
+            <tr><td>Kesimpulan &amp; laporan</td><td>25</td></tr>
+          </table>
+          <span class="pg">10</span>
+        </div>`
+      ],
+      ['Daftar Pustaka', 
+        `<div class="page">
+          <h2>Daftar Pustaka</h2>
+          <ul>
+            <li>Chang, R. (2010). <i>Chemistry</i>. McGraw-Hill.</li>
+            <li>Brown, T. L., dkk. (2018). <i>Chemistry: The Central Science</i>. Pearson.</li>
+            <li>Kemendikbudristek. (2022). <i>Buku Kimia SMA/MA Kelas XI</i>.</li>
+            <li>PhET Interactive Simulations, University of Colorado Boulder. https://phet.colorado.edu</li>
+          </ul>
+          <div class="box">Modul ini adalah draf yang dapat disesuaikan dengan alat, bahan, dan kurikulum sekolah Anda.</div>
+          <span class="pg">11</span>
+        </div>`
+      ]
+    ];
+
+    let i = 0, busy = false;
+    const bookEl = document.getElementById('book'), 
+          jump = document.getElementById('jump'), 
+          cnt = document.getElementById('cnt');
+          
+    pages.forEach((p, k) => jump.add(new Option((k + 1) + '. ' + p[0], k)));
+    
+    function show(n, dir) {
+      if (busy || n < 0 || n >= pages.length) return;
+      busy = true;
+      const old = bookEl.firstElementChild;
+      
+      const put = () => {
+        bookEl.innerHTML = pages[n][1];
+        const el = bookEl.firstElementChild;
+        
+        if (dir) el.classList.add(dir > 0 ? 'in' : 'inb');
+        
+        i = n;
+        jump.value = n;
+        cnt.textContent = (n + 1) + '/' + pages.length;
+        document.getElementById('prev').disabled = (n == 0);
+        document.getElementById('next').disabled = (n == pages.length - 1);
+        scrollTo(0, 0);
+        busy = false;
+      };
+      
+      if (old && dir) {
+        old.classList.add(dir > 0 ? 'out' : 'outb');
+        setTimeout(put, 330);
+      } else {
+        put();
+      }
+    }
+    
+    document.getElementById('prev').onclick = () => show(i - 1, -1);
+    document.getElementById('next').onclick = () => show(i + 1, 1);
+    jump.onchange = () => show(+jump.value, +jump.value > i ? 1 : -1);
+    
+    addEventListener('keydown', e => {
+      if (e.key == 'ArrowRight') show(i + 1, 1);
+      if (e.key == 'ArrowLeft') show(i - 1, -1);
+    });
+    
+    let sx = 0;
+    bookEl.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+    bookEl.addEventListener('touchend', e => {
+      const d = e.changedTouches[0].clientX - sx;
+      if (d < -60) show(i + 1, 1);
+      if (d > 60) show(i - 1, -1);
+    });
+    
+    show(0, 0);
+  </script>
+</body>
+</html>
